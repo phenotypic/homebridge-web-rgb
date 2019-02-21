@@ -70,7 +70,7 @@ HTTP_RGB.prototype = {
         } else {
   				var json = JSON.parse(responseBody);
           // Remote Characteristics
-          this.log("[*] Thermostat response: ", responseBody);
+          this.log("[*] Device response: ", responseBody);
           this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState);
           this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness);
           // Local Characteristics
@@ -138,15 +138,15 @@ HTTP_RGB.prototype = {
       var url = this.apiroute+"/setColor/"+r+g+b;
       this.cacheUpdated = false;
 
-      this.log('[*] _setRGB converted H:%s S:%s B:%s to RGB:%s ...', this.cache.hue, this.cache.saturation, 100, r+g+b);
+      this.log('[*] Converted H:%s S:%s B:%s to RGB:%s ...', this.cache.hue, this.cache.saturation, 100, r+g+b);
 
       this.log("[+] Setting color with:", this.apiroute+"/setColor/"+r+g+b);
       this._httpRequest(url, '', this.http_method, function(error, response, body) {
           if (error) {
-              this.log('... _setRGB() failed: %s', error);
+              this.log('[!] Error setting color: %s', error);
               callback(error);
           } else {
-              this.log('[*]] _setRGB() successfully set to #%s', r + g + b);
+              this.log('[*] Successfully set color to:', r+g+b);
               callback();
           }
       }.bind(this));
