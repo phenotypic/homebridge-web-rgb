@@ -27,7 +27,7 @@ homebridge-web-thermostat exposes an RGB light to HomeKit and makes it controlla
 ### Core
 | Key | Description |
 | --- | --- |
-| `accessory` | Must be `Thermostat` |
+| `accessory` | Must be `HTTP-RGB` |
 | `name` | Name to appear in the Home app |
 | `apiroute` | Root URL of your device (excluding the rest of the requests) |
 | `pollInterval` _(optional)_ | Time (in seconds) between when homebridge will check the `/status` of your device (`60` is default) |
