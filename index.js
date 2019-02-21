@@ -12,15 +12,12 @@ function HTTP_RGB(log, config) {
     this.log = log;
 
     this.name = config.name || 'RGB Light';
-    this.host = config.host || '';
+    this.apiroute = config.apiroute || '';
     this.pollInterval = config.pollInterval || 60;
 
     this.manufacturer = config.manufacturer || 'HTTP Manufacturer';
     this.model = config.model || 'homebridge-web-rgb';
     this.serial = config.serial || 'HTTP Serial Number';
-
-    this.setBright = this.host + config.setBright;
-    this.setColor = this.host + config.setColor;
 
     this.username = config.username || null;
   	this.password = config.password || null;
@@ -64,8 +61,8 @@ HTTP_RGB.prototype = {
   },
 
   _getStatus: function(callback) {
-    this.log("[+] Getting status from:", this.host+"/status");
-    var url = this.host+"/status";
+    this.log("[+] Getting status from:", this.apiroute+"/status");
+    var url = this.apiroute+"/status";
     this._httpRequest(url, '', 'GET', function (error, response, responseBody) {
         if (error) {
           this.log("[!] Error getting status: %s", error.message);
@@ -84,8 +81,8 @@ HTTP_RGB.prototype = {
   },
 
   setOn: function(value, callback) {
-    this.log("[+] setOn to: %s", value);
-    var url = this.host+"/"+value;
+    this.log("[+] Setting state with:", this.apiroute+"/setState/"+value);
+    var url = this.apiroute+"/setState/"+value;
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
         if (error) {
           this.log("[!] Error setting state", error.message);
@@ -98,8 +95,8 @@ HTTP_RGB.prototype = {
   },
 
   setBrightness: function(value, callback) {
-    this.log("[+] setBrightness to: ", value);
-    var url = this.setBright.replace('%s', value);
+    this.log("[+] Setting brightness with:", this.apiroute+"/setBrightness/"+value);
+    var url = this.apiroute+"/setBrightness/"+value;
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
         if (error) {
           this.log("[!] Error setting brightness", error.message);
@@ -138,11 +135,12 @@ HTTP_RGB.prototype = {
       var g = this._decToHex(rgb.g);
       var b = this._decToHex(rgb.b);
 
-      var url = this.setColor.replace('%s', r + g + b);
+      var url = this.apiroute+"/setColor/"+r+g+b;
       this.cacheUpdated = false;
 
-      this.log('[+] _setRGB converting H:%s S:%s B:%s to RGB:%s ...', this.cache.hue, this.cache.saturation, 100, r + g + b);
+      this.log('[*] _setRGB converted H:%s S:%s B:%s to RGB:%s ...', this.cache.hue, this.cache.saturation, 100, r+g+b);
 
+      this.log("[+] Setting color with:", this.apiroute+"/setColor/"+r+g+b);
       this._httpRequest(url, '', this.http_method, function(error, response, body) {
           if (error) {
               this.log('... _setRGB() failed: %s', error);
@@ -213,16 +211,13 @@ HTTP_RGB.prototype = {
 			.getCharacteristic(Characteristic.Hue)
 			.on('set', this.setHue.bind(this));
 
-      // This fills the homebridge cache on startup with current values, so that any request before the first poll has valid values
+    this._getStatus(function() {
+    }.bind(this));
+
+    setInterval(function() {
       this._getStatus(function() {
-
       }.bind(this));
-
-      // This polls the thermostat device once per minute and updates homebridge with the current values
-      setInterval(function() {
-        this._getStatus(function() {
-        }.bind(this));
-      }.bind(this), this.pollInterval * 1000);
+    }.bind(this), this.pollInterval * 1000);
 
     return [this.informationService, this.service];
   }
