@@ -1,5 +1,6 @@
 var Service, Characteristic;
 var request = require('request');
+var convert = require('color-convert');
 
 module.exports = function(homebridge){
     Service = homebridge.hap.Service;
@@ -70,12 +71,8 @@ HTTP_RGB.prototype = {
         } else {
           this.log("[*] Device response: ", responseBody);
   				var json = JSON.parse(responseBody);
-          var rgb = json.currentHEX;
-          var levels = this._rgbToHsl(
-              parseInt(rgb.substr(0,2),16),
-              parseInt(rgb.substr(2,2),16),
-              parseInt(rgb.substr(4,2),16)
-          );
+          var rgb = convert.hex.rgb(json.currentColor);
+          var levels = convert.rgb.hsv(rgb);
           this.cache.hue = levels[0];
           this.cache.saturation = levels[1];
           this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState);
@@ -119,6 +116,7 @@ HTTP_RGB.prototype = {
   },
 
   setHue: function(value, callback) {
+    this.log("[*] Setting hue to:", value);
     this.cache.hue = value;
     if (this.cacheUpdated) {
         this._setRGB(callback);
@@ -129,6 +127,7 @@ HTTP_RGB.prototype = {
   },
 
   setSaturation: function(value, callback) {
+    this.log("[*] Setting saturation to:", value);
     this.cache.saturation = value;
     if (this.cacheUpdated) {
         this._setRGB(callback);
@@ -139,89 +138,23 @@ HTTP_RGB.prototype = {
   },
 
   _setRGB: function(callback) {
-      var rgb = this._hsvToRgb(this.cache.hue, this.cache.saturation, 100);
+    var rgb = convert.hsv.rgb(this.cache.hue, this.cache.saturation, 100);
+    var hex = convert.rgb.hex(rgb);
 
-      var r = this._decToHex(rgb.r);
-      var g = this._decToHex(rgb.g);
-      var b = this._decToHex(rgb.b);
+    var url = this.apiroute+"/setColor/"+hex;
+    this.cacheUpdated = false;
 
-      var url = this.apiroute+"/setColor/"+r+g+b;
-      this.cacheUpdated = false;
-
-      this.log('[*] Converted H:%s S:%s B:%s to RGB:%s ...', this.cache.hue, this.cache.saturation, 100, r+g+b);
-
-      this.log("[+] Setting color with:", this.apiroute+"/setColor/"+r+g+b);
-      this._httpRequest(url, '', this.http_method, function(error, response, body) {
-          if (error) {
-              this.log('[!] Error setting color: %s', error);
-              callback(error);
-          } else {
-              this.log('[*] Successfully set color to:', r+g+b);
-              callback();
-          }
-      }.bind(this));
+    this.log("[+] Setting color with:", this.apiroute+"/setColor/"+hex);
+    this._httpRequest(url, '', this.http_method, function(error, response, body) {
+        if (error) {
+            this.log('[!] Error setting color: %s', error);
+            callback(error);
+        } else {
+            this.log('[*] Successfully set color to:', hex);
+            callback();
+        }
+    }.bind(this));
   },
-
-    _hsvToRgb: function(h, s, v) {
-        var r, g, b, i, f, p, q, t;
-
-        h /= 360;
-        s /= 100;
-        v /= 100;
-
-        i = Math.floor(h * 6);
-        f = h * 6 - i;
-        p = v * (1 - s);
-        q = v * (1 - f * s);
-        t = v * (1 - (1 - f) * s);
-        switch (i % 6) {
-            case 0: r = v; g = t; b = p; break;
-            case 1: r = q; g = v; b = p; break;
-            case 2: r = p; g = v; b = t; break;
-            case 3: r = p; g = q; b = v; break;
-            case 4: r = t; g = p; b = v; break;
-            case 5: r = v; g = p; b = q; break;
-        }
-        var rgb = { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
-        return rgb;
-    },
-
-    _decToHex: function(d, padding) {
-        var hex = Number(d).toString(16).toUpperCase();
-        padding = typeof (padding) === 'undefined' || padding === null ? padding = 2 : padding;
-
-        while (hex.length < padding) {
-            hex = '0' + hex;
-        }
-
-        return hex;
-    },
-
-    _rgbToHsl: function(r, g, b){
-        r /= 255;
-        g /= 255;
-        b /= 255;
-        var max = Math.max(r, g, b), min = Math.min(r, g, b);
-        var h, s, l = (max + min) / 2;
-
-        if(max == min){
-            h = s = 0; // achromatic
-        }else{
-            var d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            switch(max){
-                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                case g: h = (b - r) / d + 2; break;
-                case b: h = (r - g) / d + 4; break;
-            }
-            h /= 6;
-        }
-
-        h *= 360; // return degrees [0..360]
-        s *= 100; // return percent [0..100]
-        l *= 100; // return percent [0..100]
-        return [parseInt(h), parseInt(s), parseInt(l)];
-    },
 
     getServices: function() {
 
