@@ -62,7 +62,7 @@ HTTP_RGB.prototype = {
   },
 
   _getStatus: function(callback) {
-    this.log("[+] Getting status from:", this.apiroute+"/status");
+    this.log("[+] Getting status:", this.apiroute+"/status");
     var url = this.apiroute+"/status";
     this._httpRequest(url, '', 'GET', function (error, response, responseBody) {
         if (error) {
@@ -71,18 +71,17 @@ HTTP_RGB.prototype = {
         } else {
           this.log("[*] Device response: ", responseBody);
   				var json = JSON.parse(responseBody);
-          var rgb = convert.hex.rgb(json.currentColor);
-          var levels = convert.rgb.hsv(rgb);
-          this.cache.hue = levels[0];
-          this.cache.saturation = levels[1];
+          var hsv = convert.hex.hsv(json.currentColor);
+          this.cache.hue = hsv[0];
+          this.cache.saturation = hsv[1];
           this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState);
-          this.log("[*] Updated state to %s", json.currentState);
+          this.log("[*] Updated state:", json.currentState);
           this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness);
-          this.log("[*] Updated brightness to %s", json.currentBrightness);
+          this.log("[*] Updated brightness:", json.currentBrightness);
           this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cache.hue);
-          this.log("[*] Updated hue to %s", this.cache.hue);
+          this.log("[*] Updated hue:", this.cache.hue);
           this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cache.saturation);
-          this.log("[*] Updated hue to %s", this.cache.saturation);
+          this.log("[*] Updated hue:", this.cache.saturation);
   				callback();
     }}.bind(this));
   },
@@ -102,7 +101,7 @@ HTTP_RGB.prototype = {
   },
 
   setBrightness: function(value, callback) {
-    this.log("[+] Setting brightness with:", this.apiroute+"/setBrightness/"+value);
+    this.log("[+] Setting brightness:", this.apiroute+"/setBrightness/"+value);
     var url = this.apiroute+"/setBrightness/"+value;
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
         if (error) {
@@ -138,13 +137,12 @@ HTTP_RGB.prototype = {
   },
 
   _setRGB: function(callback) {
-    var rgb = convert.hsv.rgb(this.cache.hue, this.cache.saturation, 100);
-    var hex = convert.rgb.hex(rgb);
+    var hex = convert.hsv.hex(this.cache.hue, this.cache.saturation, 100);
 
     var url = this.apiroute+"/setColor/"+hex;
     this.cacheUpdated = false;
 
-    this.log("[+] Setting color with:", this.apiroute+"/setColor/"+hex);
+    this.log("[+] Setting color:", this.apiroute+"/setColor/"+hex);
     this._httpRequest(url, '', this.http_method, function(error, response, body) {
         if (error) {
             this.log('[!] Error setting color: %s', error);
