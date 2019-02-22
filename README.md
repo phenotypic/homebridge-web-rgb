@@ -52,7 +52,7 @@ Your API should be able to:
 {
     "currentState": {BOOL_VALUE},
     "currentBrightness": {INT_VALUE},
-    "currentHEX": "{HEX_VALUE}"
+    "currentColor": "{HEX_VALUE}"
 }
 ```
 
