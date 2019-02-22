@@ -68,14 +68,24 @@ HTTP_RGB.prototype = {
           this.log("[!] Error getting status: %s", error.message);
   				callback(error);
         } else {
-  				var json = JSON.parse(responseBody);
-          // Remote Characteristics
           this.log("[*] Device response: ", responseBody);
+  				var json = JSON.parse(responseBody);
+          var rgb = json.currentHEX;
+          var levels = this._rgbToHsl(
+              parseInt(rgb.substr(0,2),16),
+              parseInt(rgb.substr(2,2),16),
+              parseInt(rgb.substr(4,2),16)
+          );
+          this.cache.hue = levels[0];
+          this.cache.saturation = levels[1];
           this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState);
+          this.log("[*] Updated state to %s", json.currentState);
           this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness);
-          // Local Characteristics
+          this.log("[*] Updated brightness to %s", json.currentBrightness);
           this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cache.hue);
+          this.log("[*] Updated hue to %s", this.cache.hue);
           this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cache.saturation);
+          this.log("[*] Updated hue to %s", this.cache.saturation);
   				callback();
     }}.bind(this));
   },
@@ -185,6 +195,32 @@ HTTP_RGB.prototype = {
         }
 
         return hex;
+    },
+
+    _rgbToHsl: function(r, g, b){
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, l = (max + min) / 2;
+
+        if(max == min){
+            h = s = 0; // achromatic
+        }else{
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch(max){
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+            h /= 6;
+        }
+
+        h *= 360; // return degrees [0..360]
+        s *= 100; // return percent [0..100]
+        l *= 100; // return percent [0..100]
+        return [parseInt(h), parseInt(s), parseInt(l)];
     },
 
     getServices: function() {
