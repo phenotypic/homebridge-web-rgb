@@ -47,7 +47,7 @@ homebridge-web-thermostat exposes an RGB light to HomeKit and makes it controlla
 
 Your API should be able to:
 
-1. Return info when it recieves `/status` in the JSON format like below:
+1. Return info when it receives `/status` in the JSON format like below:
 ```
 {
     "currentState": {BOOL_VALUE},
@@ -56,17 +56,21 @@ Your API should be able to:
 }
 ```
 
-2. Set the state when it recieves:
+2. Set the state when it receives:
 ```
 /setState/{BOOL_VALUE}
 ```
 
-3. Set the color when it recieves:
+3. Set the color when it receives:
 ```
 /setColor/{HEX_VALUE}
 ```
 
-4. Set the brightness when it recieves:
+4. Set the brightness when it receives:
 ```
 /setBrightness/{INT_VALUE_0_TO_100}
 ```
+
+## To-do
+
+- [ ] Fix an issue where changing the color too fast may cause the values to come out of sync due to the way the plugin handles the way HomeKit requests the color (rarely occurs, fixes itself on next poll)
