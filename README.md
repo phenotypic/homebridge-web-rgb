@@ -73,4 +73,4 @@ Your API should be able to:
 
 ## To-do
 
-- [ ] Fix an issue where changing the color too fast may cause the values to come out of sync due to the way the plugin handles the way HomeKit requests the color (rarely occurs, fixes itself on next poll)
+- [ ] Fix an issue where changing the color too fast may cause the values to come out of sync due to how the plugin handles the way HomeKit requests the color (rarely occurs, fixes on subsequent poll)
