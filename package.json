@@ -1,6 +1,6 @@
 {
   "name": "homebridge-web-rgb",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Homebridge plugin to control a web-based RGB device",
   "main": "index.js",
   "dependencies": {
