@@ -25,23 +25,23 @@ homebridge-web-thermostat exposes an RGB light to HomeKit and makes it controlla
 ```
 
 ### Core
-| Key | Description | Type | Default |
-| --- | --- | --- | --- |
-| `accessory` | Must be `HTTP-RGB` | `string` | N/A |
-| `name` | Name to appear in the Home app | `string` | N/A |
-| `apiroute` | Root URL of your device (excluding the rest of the requests) | `string` | N/A |
-| `pollInterval` _(optional)_ | Time between when homebridge will check the `/status` of your device | `integer` (seconds) | `60` |
+| Key | Description | Default |
+| --- | --- | --- |
+| `accessory` | Must be `HTTP-RGB` | N/A |
+| `name` | Name to appear in the Home app | N/A |
+| `apiroute` | Root URL of your device (excluding the rest of the requests) | N/A |
+| `pollInterval` _(optional)_ | Time (in seconds) between when homebridge will check the `/status` of your device | `60` |
 
 ### Additional options
-| Key | Description | Type | Default |
-| --- | --- | --- | --- |
-| `timeout` _(optional)_ | Time until the accessory will be marked as "Not Responding" if it is unreachable | `integer` (milliseconds) | `5000` |
-| `http_method` _(optional)_ | The HTTP method used to communicate with the device | `string` | `GET` |
-| `username` _(optional)_ | Username if HTTP authentication is enabled | `string` | N/A |
-| `password` _(optional)_ | Password if HTTP authentication is enabled | `string` | N/A |
-| `model` _(optional)_ | Appears under "Model" for your accessory in the Home app | `string` | `homebridge-web-rgb` |
-| `serial` _(optional)_ | Appears under "Serial" for your accessory in the Home app | `string` | `HTTP Serial Number` |
-| `manufacturer` _(optional)_ | Appears under "Manufacturer" for your accessory in the Home app | `string` | `HTTP Manufacturer` |
+| Key | Description | Default |
+| --- | --- | --- |
+| `timeout` _(optional)_ | Time (in milliseconds) until the accessory will be marked as "Not Responding" if it is unreachable | `5000` |
+| `http_method` _(optional)_ | The HTTP method used to communicate with the device | `GET` |
+| `username` _(optional)_ | Username if HTTP authentication is enabled | N/A |
+| `password` _(optional)_ | Password if HTTP authentication is enabled | N/A |
+| `model` _(optional)_ | Appears under "Model" for your accessory in the Home app | `homebridge-web-rgb` |
+| `serial` _(optional)_ | Appears under "Serial" for your accessory in the Home app | `HTTP Serial Number` |
+| `manufacturer` _(optional)_ | Appears under "Manufacturer" for your accessory in the Home app | `HTTP Manufacturer` |
 
 ## API Interfacing
 
