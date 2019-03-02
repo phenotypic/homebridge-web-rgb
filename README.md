@@ -39,9 +39,9 @@ homebridge-web-thermostat exposes an RGB light to HomeKit and makes it controlla
 | `http_method` _(optional)_ | The HTTP method used to communicate with the device | `GET` |
 | `username` _(optional)_ | Username if HTTP authentication is enabled | N/A |
 | `password` _(optional)_ | Password if HTTP authentication is enabled | N/A |
-| `model` _(optional)_ | Appears under "Model" for your accessory in the Home app | `homebridge-web-rgb` |
-| `serial` _(optional)_ | Appears under "Serial" for your accessory in the Home app | `HTTP Serial Number` |
-| `manufacturer` _(optional)_ | Appears under "Manufacturer" for your accessory in the Home app | `HTTP Manufacturer` |
+| `model` _(optional)_ | Appears under the "Model" field for the device | `homebridge-web-rgb` |
+| `serial` _(optional)_ | Appears under the "Serial" field for the device | apiroute |
+| `manufacturer` _(optional)_ | Appears under the "Manufacturer" field for the device | `Tom Rodrigues` |
 
 ## API Interfacing
 
@@ -51,7 +51,7 @@ Your API should be able to:
 ```
 {
     "currentState": {BOOL_VALUE},
-    "currentBrightness": {INT_VALUE},
+    "currentBrightness": {INT_VALUE_0_TO_100},
     "currentColor": "{HEX_VALUE}"
 }
 ```
