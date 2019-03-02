@@ -16,7 +16,7 @@ function HTTP_RGB(log, config) {
   this.apiroute = config.apiroute;
   this.pollInterval = config.pollInterval || 60;
 
-  this.manufacturer = config.manufacturer || 'Tommrodrigues';
+  this.manufacturer = config.manufacturer || 'Tom Rodrigues';
   this.serial = config.serial || this.apiroute;
   this.model = config.model || 'homebridge-web-rgb';
 
