@@ -16,9 +16,9 @@ function HTTP_RGB(log, config) {
   this.apiroute = config.apiroute;
   this.pollInterval = config.pollInterval || 60;
 
-  this.manufacturer = config.manufacturer || 'homebridge-web-rgb';
-  this.model = config.model || this.apiroute;
-  this.serial = config.serial || 'Polling: ' + this.pollInterval;
+  this.manufacturer = config.manufacturer || 'Tommrodrigues';
+  this.serial = config.serial || this.apiroute;
+  this.model = config.model || 'homebridge-web-rgb';
 
   this.username = config.username || null;
   this.password = config.password || null;
@@ -61,86 +61,86 @@ HTTP_RGB.prototype = {
   },
 
   _getStatus: function(callback) {
-    var url = this.apiroute + "/status";
-    this.log("[+] Getting status:", url);
+    var url = this.apiroute + '/status';
+    this.log('[+] Getting status:', url);
 
     this._httpRequest(url, '', 'GET', function(error, response, responseBody) {
       if (error) {
-        this.log("[!] Error getting status: %s", error.message);
+        this.log('[!] Error getting status: %s', error.message);
         callback(error);
       } else {
-        this.log("[*] Device response: ", responseBody);
+        this.log('[*] Device response: ', responseBody);
         var json = JSON.parse(responseBody);
         var hsv = convert.hex.hsv(json.currentColor);
         this.cacheHue = hsv[0];
         this.cacheSaturation = hsv[1];
         this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState);
-        this.log("[*] Updated state:", json.currentState);
+        this.log('[*] Updated state:', json.currentState);
         this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness);
-        this.log("[*] Updated brightness:", json.currentBrightness);
+        this.log('[*] Updated brightness:', json.currentBrightness);
         this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue);
-        this.log("[*] Updated hue:", this.cacheHue);
+        this.log('[*] Updated hue:', this.cacheHue);
         this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation);
-        this.log("[*] Updated hue:", this.cacheSaturation);
+        this.log('[*] Updated hue:', this.cacheSaturation);
         callback();
       }
     }.bind(this));
   },
 
   setOn: function(value, callback) {
-    var url = this.apiroute + "/setState/" + value;
-    this.log("[+] Setting state:", url);
+    var url = this.apiroute + '/setState/' + value;
+    this.log('[+] Setting state:', url);
 
     this._httpRequest(url, '', this.http_method, function(error, response, responseBody) {
       if (error) {
-        this.log("[!] Error setting state", error.message);
+        this.log('[!] Error setting state', error.message);
         callback(error);
       } else {
-        this.log("[*] Sucessfully set state to %s", value);
+        this.log('[*] Sucessfully set state to %s', value);
         callback();
       }
     }.bind(this));
   },
 
   setBrightness: function(value, callback) {
-    var url = this.apiroute + "/setBrightness/" + value;
-    this.log("[+] Setting brightness:", url);
+    var url = this.apiroute + '/setBrightness/' + value;
+    this.log('[+] Setting brightness:', url);
 
     this._httpRequest(url, '', this.http_method, function(error, response, responseBody) {
       if (error) {
-        this.log("[!] Error setting brightness", error.message);
+        this.log('[!] Error setting brightness', error.message);
         callback(error);
       } else {
-        this.log("[*] Sucessfully set brightness to %s", value);
+        this.log('[*] Sucessfully set brightness to %s', value);
         callback();
       }
     }.bind(this));
   },
 
   setHue: function(value, callback) {
-    this.log("[*] Setting hue to:", value);
+    this.log('[*] Setting hue to:', value);
     this.cacheHue = value;
     this._setRGB(callback);
   },
 
   setSaturation: function(value, callback) {
-    this.log("[*] Setting saturation to:", value);
+    this.log('[*] Setting saturation to:', value);
     this.cacheSaturation = value;
     this._setRGB(callback);
   },
 
   _setRGB: function(callback) {
     this.count = this.count + 1;
-    if (this.count == 1) {
+    if (this.count === 1) {
       callback();
       return;
     }
 
     var hex = convert.hsv.hex(this.cacheHue, this.cacheSaturation, 100);
-    var url = this.apiroute + "/setColor/" + hex;
-    this.log("[+] Setting color:", url);
+    var url = this.apiroute + '/setColor/' + hex;
+    this.log('[+] Setting color:', url);
 
-    this._httpRequest(url, '', this.http_method, function(error, response, body) {
+    this._httpRequest(url, '', this.http_method, function(error, response, responseBody) {
       if (error) {
         this.log('[!] Error setting color: %s', error);
         callback(error);
