@@ -12,13 +12,13 @@ function HTTP_RGB(log, config) {
 
   this.log = log;
 
-  this.name = config.name || 'RGB Light';
-  this.apiroute = config.apiroute || '';
+  this.name = config.name;
+  this.apiroute = config.apiroute;
   this.pollInterval = config.pollInterval || 60;
 
-  this.manufacturer = config.manufacturer || 'HTTP Manufacturer';
-  this.model = config.model || 'homebridge-web-rgb';
-  this.serial = config.serial || 'HTTP Serial Number';
+  this.manufacturer = config.manufacturer || 'homebridge-web-rgb';
+  this.model = config.model || this.apiroute;
+  this.serial = config.serial || 'Polling: ' + this.pollInterval;
 
   this.username = config.username || null;
   this.password = config.password || null;
