@@ -22,8 +22,11 @@ function HTTP_RGB(log, config) {
 
   this.username = config.username || null;
   this.password = config.password || null;
-  this.timeout = config.timeout || 5000;
+  this.timeout = config.timeout || 3000;
   this.http_method = config.http_method || 'GET';
+
+  this.enableColor = config.enableColor || false;
+  this.enableBrightness = config.enableBrightness || false;
 
   this.cacheHue = 0;
   this.cacheSaturation = 0;
@@ -76,12 +79,16 @@ HTTP_RGB.prototype = {
         this.cacheSaturation = hsv[1];
         this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState);
         this.log('[*] Updated state:', json.currentState);
-        this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness);
-        this.log('[*] Updated brightness:', json.currentBrightness);
-        this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue);
-        this.log('[*] Updated hue:', this.cacheHue);
-        this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation);
-        this.log('[*] Updated hue:', this.cacheSaturation);
+        if (this.enableBrightness) {
+          this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness);
+          this.log('[*] Updated brightness:', json.currentBrightness);
+        }
+        if (this.enableColor) {
+          this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue);
+          this.log('[*] Updated hue:', this.cacheHue);
+          this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation);
+          this.log('[*] Updated saturation:', this.cacheSaturation);
+        }
         callback();
       }
     }.bind(this));
@@ -164,17 +171,20 @@ HTTP_RGB.prototype = {
       .getCharacteristic(Characteristic.On)
       .on('set', this.setOn.bind(this));
 
-    this.service
-      .getCharacteristic(Characteristic.Brightness)
-      .on('set', this.setBrightness.bind(this));
+    if (this.enableBrightness) {
+      this.service
+        .getCharacteristic(Characteristic.Brightness)
+        .on('set', this.setBrightness.bind(this));
+    }
 
-    this.service
-      .getCharacteristic(Characteristic.Saturation)
-      .on('set', this.setSaturation.bind(this));
-
-    this.service
-      .getCharacteristic(Characteristic.Hue)
-      .on('set', this.setHue.bind(this));
+    if (this.enableColor) {
+      this.service
+        .getCharacteristic(Characteristic.Saturation)
+        .on('set', this.setSaturation.bind(this));
+      this.service
+        .getCharacteristic(Characteristic.Hue)
+        .on('set', this.setHue.bind(this));
+    }
 
     this._getStatus(function() {}.bind(this));
 
