@@ -32,10 +32,16 @@ homebridge-web-thermostat exposes an RGB light to HomeKit and makes it controlla
 | `apiroute` | Root URL of your device (excluding the rest of the requests) | N/A |
 | `pollInterval` _(optional)_ | Time (in seconds) between when homebridge will check the `/status` of your device | `60` |
 
+## Optional fields
+| Key | Description | Default |
+| --- | --- | --- |
+| `enableColor` | Whether or not to expose color for your RGB device | `true` |
+| `enableBrightness` | Whether or not to expose brightness for your RGB device | `true` |
+
 ### Additional options
 | Key | Description | Default |
 | --- | --- | --- |
-| `timeout` _(optional)_ | Time (in milliseconds) until the accessory will be marked as "Not Responding" if it is unreachable | `5000` |
+| `timeout` _(optional)_ | Time (in milliseconds) until the accessory will be marked as "Not Responding" if it is unreachable | `3000` |
 | `http_method` _(optional)_ | The HTTP method used to communicate with the device | `GET` |
 | `username` _(optional)_ | Username if HTTP authentication is enabled | N/A |
 | `password` _(optional)_ | Password if HTTP authentication is enabled | N/A |
