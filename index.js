@@ -25,8 +25,8 @@ function HTTP_RGB(log, config) {
   this.timeout = config.timeout || 3000;
   this.http_method = config.http_method || 'GET';
 
-  this.enableColor = config.enableColor || false;
-  this.enableBrightness = config.enableBrightness || false;
+  this.enableColor = config.enableColor || true;
+  this.enableBrightness = config.enableBrightness || true;
 
   this.cacheHue = 0;
   this.cacheSaturation = 0;
