@@ -70,6 +70,7 @@ HTTP_RGB.prototype = {
     this._httpRequest(url, '', 'GET', function(error, response, responseBody) {
       if (error) {
         this.log('[!] Error getting status: %s', error.message);
+        this.service.getCharacteristic(Characteristic.On).updateValue(new Error("Polling failed"));
         callback(error);
       } else {
         this.log('[*] Device response: ', responseBody);
