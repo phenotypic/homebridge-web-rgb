@@ -1,10 +1,10 @@
 # homebridge-web-rgb
 
-#### Homebridge plugin to control a web-based RGB device
+[![npm](https://img.shields.io/npm/dt/homebridge-web-rgb.svg)](https://www.npmjs.com/package/homebridge-web-rgb) [![npm](https://img.shields.io/npm/v/homebridge-web-rgb.svg)](https://www.npmjs.com/package/homebridge-web-rgb)
 
 ## Description
 
-homebridge-web-thermostat exposes an RGB light to HomeKit and makes it controllable via HTTP requests. The plugin will poll your device at regular intervals and present you with this information when requested. The plugin also allows you so control a light variables via HomeKit such as the brightness.
+This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-based RGB device to to Apple's [HomeKit](http://www.apple.com/ios/home/). Using simple HTTP requests, you can turn on/off the light as well as control it's color and brightness.
 
 ## Installation
 
