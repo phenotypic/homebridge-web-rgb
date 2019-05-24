@@ -104,7 +104,7 @@ HTTP_RGB.prototype = {
         this.log('[!] Error setting state', error.message);
         callback(error);
       } else {
-        this.log('[*] Sucessfully set state to %s', value);
+        this.log('[*] Successfully set state to %s', value);
         callback();
       }
     }.bind(this));
@@ -119,7 +119,7 @@ HTTP_RGB.prototype = {
         this.log('[!] Error setting brightness', error.message);
         callback(error);
       } else {
-        this.log('[*] Sucessfully set brightness to %s', value);
+        this.log('[*] Successfully set brightness to %s', value);
         callback();
       }
     }.bind(this));
