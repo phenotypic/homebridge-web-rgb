@@ -1,6 +1,7 @@
 var Service, Characteristic;
-var request = require('request');
-var convert = require('color-convert');
+const request = require('request');
+const convert = require('color-convert');
+const packageJson = require('./package.json')
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -16,9 +17,10 @@ function HTTP_RGB(log, config) {
   this.apiroute = config.apiroute;
   this.pollInterval = config.pollInterval || 60;
 
-  this.manufacturer = config.manufacturer || 'Tom Rodrigues';
+  this.manufacturer = config.manufacturer || packageJson.author.name;
   this.serial = config.serial || this.apiroute;
-  this.model = config.model || 'homebridge-web-rgb';
+  this.model = config.model || packageJson.name;
+  this.firmware = config.firmware || packageJson.version;
 
   this.username = config.username || null;
   this.password = config.password || null;
@@ -166,7 +168,8 @@ HTTP_RGB.prototype = {
     this.informationService
       .setCharacteristic(Characteristic.Manufacturer, this.manufacturer)
       .setCharacteristic(Characteristic.Model, this.model)
-      .setCharacteristic(Characteristic.SerialNumber, this.serial);
+      .setCharacteristic(Characteristic.SerialNumber, this.serial)
+      .setCharacteristic(Characteristic.FirmwareRevision, this.firmware);
 
     this.service
       .getCharacteristic(Characteristic.On)
