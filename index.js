@@ -40,6 +40,8 @@ function HTTP_RGB (log, config) {
     }
   }
 
+  this.log('%s initialized', this.name)
+
   this.service = new Service.Lightbulb(this.name)
 }
 
@@ -70,7 +72,7 @@ HTTP_RGB.prototype = {
 
     this._httpRequest(url, '', 'GET', function (error, response, responseBody) {
       if (error) {
-        this.log('[!] Error getting status: %s', error.message)
+        this.log.warn('[!] Error getting status: %s', error.message)
         this.service.getCharacteristic(Characteristic.On).updateValue(new Error('Polling failed'))
         callback(error)
       } else {
@@ -102,7 +104,7 @@ HTTP_RGB.prototype = {
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
       if (error) {
-        this.log('[!] Error setting state: %s', error.message)
+        this.log.warn('[!] Error setting state: %s', error.message)
         callback(error)
       } else {
         this.log('[*] Successfully set state to %s', value)
@@ -117,7 +119,7 @@ HTTP_RGB.prototype = {
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
       if (error) {
-        this.log('[!] Error setting brightness: %s', error.message)
+        this.log.warn('[!] Error setting brightness: %s', error.message)
         callback(error)
       } else {
         this.log('[*] Successfully set brightness to %s', value)
@@ -151,7 +153,7 @@ HTTP_RGB.prototype = {
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
       if (error) {
-        this.log('[!] Error setting color: %s', error)
+        this.log.warn('[!] Error setting color: %s', error)
         callback(error)
       } else {
         this.log('[*] Successfully set color to: %s', hex)
