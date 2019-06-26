@@ -40,8 +40,6 @@ function HTTP_RGB (log, config) {
     }
   }
 
-  this.log('%s initialized', this.name)
-
   this.service = new Service.Lightbulb(this.name)
 }
 
@@ -68,30 +66,30 @@ HTTP_RGB.prototype = {
 
   _getStatus: function (callback) {
     var url = this.apiroute + '/status'
-    this.log('[+] Getting status: %s', url)
+    this.log('Getting status: %s', url)
 
     this._httpRequest(url, '', 'GET', function (error, response, responseBody) {
       if (error) {
-        this.log.warn('[!] Error getting status: %s', error.message)
+        this.log.warn('Error getting status: %s', error.message)
         this.service.getCharacteristic(Characteristic.On).updateValue(new Error('Polling failed'))
         callback(error)
       } else {
-        this.log('[*] Device response: %s', responseBody)
+        this.log('Device response: %s', responseBody)
         var json = JSON.parse(responseBody)
         var hsv = convert.hex.hsv(json.currentColor)
         this.cacheHue = hsv[0]
         this.cacheSaturation = hsv[1]
         this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState)
-        this.log('[*] Updated state: %s', json.currentState)
+        this.log('Updated state: %s', json.currentState)
         if (this.enableBrightness) {
           this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness)
-          this.log('[*] Updated brightness: %s', json.currentBrightness)
+          this.log('Updated brightness: %s', json.currentBrightness)
         }
         if (this.enableColor) {
           this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue)
-          this.log('[*] Updated hue: %s', this.cacheHue)
+          this.log('Updated hue: %s', this.cacheHue)
           this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation)
-          this.log('[*] Updated saturation: %s', this.cacheSaturation)
+          this.log('Updated saturation: %s', this.cacheSaturation)
         }
         callback()
       }
@@ -100,14 +98,14 @@ HTTP_RGB.prototype = {
 
   setOn: function (value, callback) {
     var url = this.apiroute + '/setState/' + value
-    this.log('[+] Setting state: %s', url)
+    this.log('Setting state: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
       if (error) {
-        this.log.warn('[!] Error setting state: %s', error.message)
+        this.log.warn('Error setting state: %s', error.message)
         callback(error)
       } else {
-        this.log('[*] Successfully set state to %s', value)
+        this.log('Successfully set state to %s', value)
         callback()
       }
     }.bind(this))
@@ -115,27 +113,27 @@ HTTP_RGB.prototype = {
 
   setBrightness: function (value, callback) {
     var url = this.apiroute + '/setBrightness/' + value
-    this.log('[+] Setting brightness: %s', url)
+    this.log('Setting brightness: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
       if (error) {
-        this.log.warn('[!] Error setting brightness: %s', error.message)
+        this.log.warn('Error setting brightness: %s', error.message)
         callback(error)
       } else {
-        this.log('[*] Successfully set brightness to %s', value)
+        this.log('Successfully set brightness to %s', value)
         callback()
       }
     }.bind(this))
   },
 
   setHue: function (value, callback) {
-    this.log('[*] Setting hue to: %s', value)
+    this.log('Setting hue to: %s', value)
     this.cacheHue = value
     this._setRGB(callback)
   },
 
   setSaturation: function (value, callback) {
-    this.log('[*] Setting saturation to: %s', value)
+    this.log('Setting saturation to: %s', value)
     this.cacheSaturation = value
     this._setRGB(callback)
   },
@@ -149,14 +147,14 @@ HTTP_RGB.prototype = {
 
     var hex = convert.hsv.hex(this.cacheHue, this.cacheSaturation, 100)
     var url = this.apiroute + '/setColor/' + hex
-    this.log('[+] Setting color: %s', url)
+    this.log('Setting color: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
       if (error) {
-        this.log.warn('[!] Error setting color: %s', error)
+        this.log.warn('Error setting color: %s', error)
         callback(error)
       } else {
-        this.log('[*] Successfully set color to: %s', hex)
+        this.log('Successfully set color to: %s', hex)
         callback()
       }
       this.count = 0
