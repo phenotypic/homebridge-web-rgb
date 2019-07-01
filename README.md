@@ -30,11 +30,11 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-ba
 | `accessory` | Must be `HTTP-RGB` | N/A |
 | `name` | Name to appear in the Home app | N/A |
 | `apiroute` | Root URL of your device | N/A |
-| `pollInterval` _(optional)_ | Time (in seconds) between device polls | `60` |
 
 ## Optional fields
 | Key | Description | Default |
 | --- | --- | --- |
+| `pollInterval` _(optional)_ | Time (in seconds) between device polls | `300` |
 | `enableColor` | Whether to expose color for your RGB device | `true` |
 | `enableBrightness` | Whether to expose brightness for your RGB device | `true` |
 | `listener` | Whether to start a listener to get real-time changes from the device | `false` |
