@@ -1,6 +1,8 @@
 var Service, Characteristic
 const request = require('request')
 const convert = require('color-convert')
+const ip = require('ip')
+const http = require('http')
 const packageJson = require('./package.json')
 
 module.exports = function (homebridge) {
@@ -15,6 +17,9 @@ function HTTP_RGB (log, config) {
   this.name = config.name
   this.apiroute = config.apiroute
   this.pollInterval = config.pollInterval || 60
+  this.listener = config.listener || false
+  this.port = config.port || 2000
+  this.requestArray = ['color', 'brightness', 'state']
 
   this.manufacturer = config.manufacturer || packageJson.author.name
   this.serial = config.serial || this.apiroute
@@ -38,6 +43,26 @@ function HTTP_RGB (log, config) {
       user: this.username,
       pass: this.password
     }
+  }
+
+  if (this.listener) {
+    this.server = http.createServer(function (request, response) {
+      var parts = request.url.split('/')
+      var partOne = parts[parts.length - 2]
+      var partTwo = parts[parts.length - 1]
+      if (parts.length === 3 && this.requestArray.includes(partOne)) {
+        this.log('Handling request: %s', request.url)
+        response.end('Handling request')
+        this._httpHandler(partOne, partTwo)
+      } else {
+        this.log.warn('Invalid request: %s', request.url)
+        response.end('Invalid request')
+      }
+    }.bind(this))
+
+    this.server.listen(this.port, function () {
+      this.log('Listen server: http://%s:%s', ip.address(), this.port)
+    }.bind(this))
   }
 
   this.service = new Service.Lightbulb(this.name)
@@ -94,6 +119,30 @@ HTTP_RGB.prototype = {
         callback()
       }
     }.bind(this))
+  },
+
+  _httpHandler: function (characteristic, value) {
+    switch (characteristic) {
+      case 'state':
+        this.log('Updating %s to: %s', characteristic, value)
+        this.service.getCharacteristic(Characteristic.On).updateValue(value)
+        break
+      case 'brightness':
+        this.log('Updating %s to: %s', characteristic, value)
+        this.service.getCharacteristic(Characteristic.Brightness).updateValue(value)
+        break
+      case 'color':
+        var hsv = convert.hex.hsv(value)
+        this.cacheHue = hsv[0]
+        this.cacheSaturation = hsv[1]
+        this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue)
+        this.log('Updating hue to: %s', this.cacheHue)
+        this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation)
+        this.log('Updating saturation to: %s', this.cacheSaturation)
+        break
+      default:
+        this.log.warn('Unknown characteristic "%s" with value "%s"', characteristic, value)
+    }
   },
 
   setOn: function (value, callback) {
