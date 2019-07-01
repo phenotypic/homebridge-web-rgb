@@ -59,7 +59,7 @@ Your API should be able to:
 1. Return JSON information when it receives `/status`:
 ```
 {
-    "currentState": INT_OR_BOOL_VALUE,
+    "currentState": INT_VALUE,
     "currentBrightness": INT_VALUE,
     "currentColor": "HEX_VALUE"
 }
