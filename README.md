@@ -37,7 +37,7 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-ba
 | --- | --- | --- |
 | `enableColor` | Whether to expose color for your RGB device | `true` |
 | `enableBrightness` | Whether to expose brightness for your RGB device | `true` |
-| `listener` | Whether to start a listener to get real-time changes form the device | `false` |
+| `listener` | Whether to start a listener to get real-time changes from the device | `false` |
 
 ### Additional options
 | Key | Description | Default |
