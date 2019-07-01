@@ -59,7 +59,7 @@ Your API should be able to:
 1. Return JSON information when it receives `/status`:
 ```
 {
-    "currentState": INT_VALUE,
+    "currentState": INT_OR_BOOL_VALUE,
     "currentBrightness": INT_VALUE,
     "currentColor": "HEX_VALUE"
 }
@@ -67,7 +67,7 @@ Your API should be able to:
 
 2. Set the state when it receives:
 ```
-/setState/INT_VALUE
+/setState/BOOL_VALUE
 ```
 
 3. Set the color when it receives:
