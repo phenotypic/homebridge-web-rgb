@@ -35,8 +35,8 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-ba
 | Key | Description | Default |
 | --- | --- | --- |
 | `pollInterval` _(optional)_ | Time (in seconds) between device polls | `300` |
-| `enableColor` | Whether to expose color for your RGB device | `true` |
-| `enableBrightness` | Whether to expose brightness for your RGB device | `true` |
+| `enableColor` | Whether to expose color for your RGB device (`yes`/`no`) | `yes` |
+| `enableBrightness` | Whether to expose brightness for your RGB device (`yes`/`no`) | `yes` |
 | `listener` | Whether to start a listener to get real-time changes from the device | `false` |
 
 ### Additional options
