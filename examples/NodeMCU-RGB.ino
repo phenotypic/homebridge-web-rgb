@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 
-// GitHub Page = https://github.com/Tommrodrigues/homebridge-nodemcu-rgb
+// GitHub Page = https://github.com/Tommrodrigues/homebridge-web-rgb
 
 //GND = Ground
 //D5 = Red
