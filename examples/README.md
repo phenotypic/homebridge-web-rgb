@@ -43,7 +43,7 @@ npm install -g homebridge-web-rgb
     {
         "accessory": "HTTP-RGB",
         "name": "RGB Strip",
-        "apiroute": "rgb.local"
+        "apiroute": "http://rgb.local"
     }
 ]
 ```
