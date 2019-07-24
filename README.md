@@ -6,6 +6,8 @@
 
 This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-based RGB device to Apple's [HomeKit](http://www.apple.com/ios/home/). Using simple HTTP requests, the plugin allows you to turn on/off the light as well as control its color and brightness.
 
+Find script samples for the RGB controller in the _examples_ folder.
+
 ## Installation
 
 1. Install [homebridge](https://github.com/nfarina/homebridge#installation-details)
