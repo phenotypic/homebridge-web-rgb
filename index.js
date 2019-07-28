@@ -32,8 +32,8 @@ function HTTP_RGB (log, config) {
   this.timeout = config.timeout || 3000
   this.http_method = config.http_method || 'GET'
 
-  this.enableColor = config.enableColor || 'yes'
-  this.enableBrightness = config.enableBrightness || 'yes'
+  this.disableColor = config.disableColor || false
+  this.disableBrightness = config.disableBrightness || false
 
   this.cacheHue = 0
   this.cacheSaturation = 0
@@ -107,11 +107,11 @@ HTTP_RGB.prototype = {
         this.cacheSaturation = hsv[1]
         this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState)
         this.log('Updated state to: %s', json.currentState)
-        if (this.enableBrightness === 'yes') {
+        if (!this.disableBrightness) {
           this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness)
           this.log('Updated brightness to: %s', json.currentBrightness)
         }
-        if (this.enableColor === 'yes') {
+        if (!this.disableColor) {
           this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue)
           this.log.debug('Updated hue to: %s', this.cacheHue)
           this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation)
@@ -225,13 +225,13 @@ HTTP_RGB.prototype = {
       .getCharacteristic(Characteristic.On)
       .on('set', this.setOn.bind(this))
 
-    if (this.enableBrightness === 'yes') {
+    if (!this.disableBrightness) {
       this.service
         .getCharacteristic(Characteristic.Brightness)
         .on('set', this.setBrightness.bind(this))
     }
 
-    if (this.enableColor === 'yes') {
+    if (!this.disableColor) {
       this.service
         .getCharacteristic(Characteristic.Saturation)
         .on('set', this.setSaturation.bind(this))
