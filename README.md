@@ -36,8 +36,8 @@ Find script samples for the RGB controller in the _examples_ folder.
 ## Optional fields
 | Key | Description | Default |
 | --- | --- | --- |
-| `enableColor` | Whether to expose color for your RGB device (`yes`/`no`) | `yes` |
-| `enableBrightness` | Whether to expose brightness for your RGB device (`yes`/`no`) | `yes` |
+| `disableColor` | Whether to expose color for your RGB device | `false` |
+| `disableBrightness` | Whether to expose brightness for your RGB device | `false` |
 
 ### Additional options
 | Key | Description | Default |
