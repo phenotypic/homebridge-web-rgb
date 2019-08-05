@@ -3,20 +3,20 @@
 
 // GitHub Page = https://github.com/Tommrodrigues/homebridge-web-rgb
 
-//GND = Ground
-//D5 = Red
-//D6 = Green
-//D7 = Blue
-//D8 = White (if enabled below)
+// GND = Ground
+// D5 = Red
+// D6 = Green
+// D7 = Blue
+// D8 = White (if enabled below)
 
 /////////////////// CHANGE THESE VALUES //////////////////////
-const char* ssid = "SSID"; //Name of your network
-const char* password = "PASSWORD"; //Password for your network
-const char* mdns = "rgb"; //mDNS name
-String hexString = "FFFFFF"; //Initial HEX color (FFFFFF = White)
-int brightNumber = 100; //Initial Brightness (%)
-const bool rgbw = false; //Whether or not to support a white channel (D8)
-const float STEPS = 100; //Number of steps while fading (lower is faster)
+const char* ssid = "SSID"; // Name of your network
+const char* password = "PASSWORD"; // Password for your network
+const char* mdns = "rgb"; // mDNS name
+String hexString = "FFFFFF"; // Initial HEX color (FFFFFF = White)
+int brightNumber = 100; // Initial Brightness (%)
+const bool rgbw = false; // Whether or not to support a white channel (D8)
+const float STEPS = 100; // Number of steps while fading (lower is faster)
 //////////////////////////////////////////////////////////////
 
 const int redPin = 14;
