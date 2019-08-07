@@ -52,6 +52,6 @@ npm install -g homebridge-web-rgb
 
 - If you have an `rgbw` or `rgbww` strip and you have correctly adapted the above wiring diagram to support this, you can set the `rgbw` variable to `true` in the `.ino` script and then use `D8` of the NodeMCU for this channel. Then, whenever you set the color to pure white (`FFFFFF`), the `RGB` LEDs will be turned off and the white one will be activated instead. No changes need to be made to your `config.json`.
 
-- If your strip _only_ supports a white channel (no `rgb`) and you have correctly adapted the above wiring diagram for this, you can set the `rgbw` variable to `true` in the `.ino` script and then use `D8` of the NodeMCU for this channel (leave `hexString` as `FFFFFF`). You should then add `"enableColor": false` to the `config.json`. Now, HomeKit will only expose the brightness characteristic and not the color one.
+- If your strip _only_ supports a white channel (no `rgb`) and you have correctly adapted the above wiring diagram for this, you can set the `rgbw` variable to `true` in the `.ino` script and then use `D8` of the NodeMCU for this channel (leave `hexString` as `FFFFFF`). You should then add `"disableColor": true` to the `config.json`. Now, HomeKit will only expose the brightness characteristic and not the color one.
 
 - In the _HEX.md_ file included in this repository, you can find a selection of HEX colors to try out on your own RGB strips
