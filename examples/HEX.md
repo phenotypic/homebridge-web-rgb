@@ -27,3 +27,8 @@ Here is a selection of HEX colors I have found to look effective on the RGB stri
 **Neon Purple**: `FF006A`
 
 ![FF006A](https://www.colorhexa.com/FF006A.png)
+
+---
+**Sky Blue**: `1CF0FF`
+
+![1CF0FF](https://www.colorhexa.com/1CF0FF.png)
