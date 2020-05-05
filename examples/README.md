@@ -50,7 +50,7 @@ npm install -g homebridge-web-rgb
 
 ## Notes
 
-- If you have an RGB + W/WW strip, and you have correctly adapted the above wiring diagram to support this, you can set the `rgbw` variable to `true` in the `.ino` script, then use `D8` of the NodeMCU for this channel. Then, whenever you set the color to pure white (`FFFFFF`), the `RGB` LEDs will be turned off and the white ones will be activated instead. No changes need to be made to your `config.json`
+- If you have an RGB+W/WW strip, and you have correctly adapted the above wiring diagram to support this, you can set the `rgbw` variable to `true` in the `.ino` script, then use `D8` of the NodeMCU for this channel. Then, whenever you set the color to pure white (`FFFFFF`), the `RGB` LEDs will be turned off and the white ones will be activated instead. No changes need to be made to your `config.json`
 
 - If your strip _only_ supports a white channel,  and you have correctly adapted the above wiring diagram for this, you can set the `rgbw` variable to `true` in the `.ino` script, then use `D8` of the NodeMCU for this channel (leave `hexString` as `FFFFFF`). You should then add `"disableColor": true` to the `config.json`
 
