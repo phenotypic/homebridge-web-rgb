@@ -34,6 +34,7 @@ function HTTP_RGB (log, config) {
 
   this.disableColor = config.disableColor || false
   this.disableBrightness = config.disableBrightness || false
+  this.colorTemperature = config.colorTemperature || false
 
   this.cacheHue = 0
   this.cacheSaturation = 0
@@ -103,6 +104,7 @@ HTTP_RGB.prototype = {
         this.log.debug('Device response: %s', responseBody)
         var json = JSON.parse(responseBody)
         var hsv = convert.hex.hsv(json.currentColor)
+        json.colorTemperature = 440 // CHANGE
         this.cacheHue = hsv[0]
         this.cacheSaturation = hsv[1]
         this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState)
@@ -117,6 +119,10 @@ HTTP_RGB.prototype = {
           this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation)
           this.log.debug('Updated saturation to: %s', this.cacheSaturation)
           this.log('Updated color to: %s', json.currentColor)
+        }
+        if (this.colorTemperature) {
+          this.service.getCharacteristic(Characteristic.ColorTemperature).updateValue(json.colorTemperature)
+          this.log('Updated color temperature to: %s', json.colorTemperature)
         }
         callback()
       }
@@ -158,6 +164,21 @@ HTTP_RGB.prototype = {
         callback(error)
       } else {
         this.log('Set state to %s', value)
+        callback()
+      }
+    }.bind(this))
+  },
+
+  setColorTemperature: function (value, callback) {
+    var url = this.apiroute + '/setColorTemperature/' + value
+    this.log.debug('Setting color temperature: %s', url)
+
+    this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
+      if (error) {
+        this.log.warn('Error setting color temperature: %s', error.message)
+        callback(error)
+      } else {
+        this.log('Set color temperature to %s', value)
         callback()
       }
     }.bind(this))
@@ -238,6 +259,12 @@ HTTP_RGB.prototype = {
       this.service
         .getCharacteristic(Characteristic.Hue)
         .on('set', this.setHue.bind(this))
+    }
+
+    if (this.colorTemperature) {
+      this.service
+        .getCharacteristic(Characteristic.ColorTemperature)
+        .on('set', this.setColorTemperature.bind(this))
     }
 
     this._getStatus(function () {})
