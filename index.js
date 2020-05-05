@@ -20,7 +20,7 @@ function HTTP_RGB (log, config) {
 
   this.listener = config.listener || false
   this.port = config.port || 2000
-  this.requestArray = ['color', 'brightness', 'state']
+  this.requestArray = ['color', 'brightness', 'state', 'colorTemperature']
 
   this.manufacturer = config.manufacturer || packageJson.author.name
   this.serial = config.serial || this.apiroute
@@ -136,6 +136,10 @@ HTTP_RGB.prototype = {
         break
       case 'brightness':
         this.service.getCharacteristic(Characteristic.Brightness).updateValue(value)
+        this.log('Updated %s to: %s', characteristic, value)
+        break
+      case 'colorTemperature':
+        this.service.getCharacteristic(Characteristic.ColorTemperature).updateValue(value)
         this.log('Updated %s to: %s', characteristic, value)
         break
       case 'color':
