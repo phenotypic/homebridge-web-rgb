@@ -104,7 +104,6 @@ HTTP_RGB.prototype = {
         this.log.debug('Device response: %s', responseBody)
         var json = JSON.parse(responseBody)
         var hsv = convert.hex.hsv(json.currentColor)
-        json.colorTemperature = 440 // CHANGE
         this.cacheHue = hsv[0]
         this.cacheSaturation = hsv[1]
         this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState)
