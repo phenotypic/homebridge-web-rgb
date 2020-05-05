@@ -4,7 +4,7 @@
 
 ## Description
 
-This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-based RGB device to Apple's [HomeKit](http://www.apple.com/ios/home/). Using simple HTTP requests, the plugin allows you to turn on/off the light as well as control its color and brightness.
+This [homebridge](https://github.com/nfarina/homebridge) plugin exposes a web-based RGB device to Apple's [HomeKit](http://www.apple.com/ios/home/). Using simple HTTP requests, the plugin allows you to turn on/off the light as well as control its color, color temperature, and brightness.
 
 Find script samples for the RGB controller in the _examples_ folder.
 
@@ -38,6 +38,7 @@ Find script samples for the RGB controller in the _examples_ folder.
 | --- | --- | --- |
 | `disableColor` | Whether the color characteristic should be hidden | `false` |
 | `disableBrightness` | Whether the brightness characteristic should be hidden | `false` |
+| `colorTemperature` | Whether to expose the color temperature characteristic separately from the color characteristic | `false` |
 
 ### Additional options
 | Key | Description | Default |
@@ -67,6 +68,10 @@ Your API should be able to:
 }
 ```
 
+**Note:** You must also include the following fields in `/status` where relevant:
+
+- `colorTemperature` (if `colorTemperature` is enabled)
+
 2. Set the state when it receives:
 ```
 /setState/BOOL_VALUE
@@ -80,6 +85,11 @@ Your API should be able to:
 4. Set the brightness when it receives:
 ```
 /setBrightness/INT_VALUE
+```
+
+4. Set the color temperature when it receives: (if `colorTemperature` is enabled)
+```
+/setColorTemperature/INT_VALUE
 ```
 
 ### Optional (if listener is enabled)
@@ -97,4 +107,9 @@ Your API should be able to:
 3. Update `brightness` following a manual override by messaging the listen server:
 ```
 /brightness/INT_VALUE
+```
+
+3. Update `colorTemperature` following a manual override by messaging the listen server: (if `colorTemperature` is enabled)
+```
+/colorTemperature/INT_VALUE
 ```
