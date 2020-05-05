@@ -60,10 +60,10 @@ Find script samples for the RGB controller in the _examples_ folder.
 | Device type | Changes to `config.json` |
 | --- | --- |
 | RGB | N/A |
-| RGB + W/WW | N/A (API handles) |
+| RGBW/WW | N/A (API handles) |
 | Cool/warm white | `"disableColor": true` |
 | CCT | `"disableColor": true`, `"colorTemperature": true`|
-| RBG + CCT | `"colorTemperature": true`|
+| RBGCCT | `"colorTemperature": true`|
 
 ## API Interfacing
 
