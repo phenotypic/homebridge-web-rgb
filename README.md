@@ -55,6 +55,16 @@ Find script samples for the RGB controller in the _examples_ folder.
 | `manufacturer` | Appears under the _Manufacturer_ field for the accessory | author |
 | `firmware` | Appears under the _Firmware_ field for the accessory | version |
 
+## Examples
+
+| Device type | Changes to `config.json` |
+| --- | --- |
+| RGB | N/A |
+| RGB + W/WW | N/A (API handles) |
+| Cool/warm white | `"disableColor": true` |
+| CCT | `"disableColor": true`, `"colorTemperature": true`|
+| RBG + CCT | `"colorTemperature": true`|
+
 ## API Interfacing
 
 Your API should be able to:
