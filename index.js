@@ -221,7 +221,7 @@ HTTP_RGB.prototype = {
     }
 
     var hex = convert.hsv.hex(this.cacheHue, this.cacheSaturation, 100)
-    var url = this.apiroute + '/setColor/' + hex
+    var url = this.apiroute + '/setColor?value=' + hex
     this.log.debug('Setting color: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
