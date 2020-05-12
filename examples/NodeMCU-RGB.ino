@@ -1,5 +1,8 @@
 #include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <ArduinoJson.h>
 
 // GitHub Page = https://github.com/Tommrodrigues/homebridge-web-rgb
 
@@ -29,7 +32,7 @@ int actualR = 0, actualG = 0, actualB = 0, actualW = 0;
 String oldHexString;
 int r, g, b, w;
 
-WiFiServer server(80);
+ESP8266WebServer server(80);
 
 void setup() {
   pinMode(redPin, OUTPUT);
@@ -56,9 +59,6 @@ void setup() {
   Serial.println();
   Serial.println("Connected successfully");
 
-  // Start the server
-  server.begin();
-
   // Print the IP address
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
@@ -67,6 +67,48 @@ void setup() {
     Serial.println("Error setting up MDNS responder!");
   }
   Serial.println("mDNS address: " + String(mdns) + ".local");
+
+  server.on("/status", []() {
+    size_t capacity = JSON_OBJECT_SIZE(3) + 51;
+    DynamicJsonDocument doc(capacity);
+
+    doc["currentState"] = state;
+    doc["currentBrightness"] = brightNumber;
+    doc["currentColor"] = hexString;
+
+    String json;
+    serializeJson(doc, json);
+    server.send(200, "application/json", json);
+  });
+
+  server.on("/setColor", []() {
+    hexString = server.arg("value");
+    setLEDs();
+    server.send(200);
+  });
+
+  server.on("/setBrightness", []() {
+    brightNumber = server.arg("value").toInt();
+    setLEDs();
+    server.send(200);
+  });
+
+  server.on("/setState", []() {
+    if (server.arg("value") == "true") {
+      state = true;
+      setLEDs();
+    } else {
+      oldHexString = hexString;
+      hexString = "000000";
+      setLEDs();
+      hexString = oldHexString;
+      state = false;
+    }
+    server.send(200);
+  });
+  
+  // Start the server
+  server.begin();
 }
 
 void setLEDs() {
@@ -110,63 +152,6 @@ void setLEDs() {
 }
 
 void loop() {
-
+  server.handleClient();
   MDNS.update();
-
-  // Check if a client has connected
-  WiFiClient client = server.available();
-  if (!client) {
-    return;
-  }
-
-  // Wait until the client sends some data
-  Serial.println("New client");
-  while (!client.available()) {
-    delay(1);
-  }
-
-  // Read the first line of the request
-  String request = client.readStringUntil('\r');
-  Serial.println(request);
-  client.flush();
-
-  // Return the response
-  client.println("HTTP/1.1 200 OK");
-  client.println("Content-Type: text/html");
-  client.println();
-
-  // Match the request
-  if (request.indexOf("/status") != -1) {
-    client.println("{\"currentState\": " + String(state) + ",");
-    client.println("\"currentBrightness\": " + String(brightNumber) + ",");
-    client.println("\"currentColor\": \"" + String(hexString) + "\"}");
-  }
-
-  if (request.indexOf("/setColor") != -1) {
-    hexString = (request.substring(14, 20));
-    setLEDs();
-  }
-
-  if (request.indexOf("/setBrightness") != -1) {
-    brightNumber = request.substring(19, 22).toInt();
-    setLEDs();
-  }
-
-  if (request.indexOf("/setState/true") != -1) {
-    state = true;
-    setLEDs();
-  }
-
-  if (request.indexOf("/setState/false") != -1) {
-    oldHexString = hexString;
-    hexString = "000000";
-    setLEDs();
-    hexString = oldHexString;
-    state = false;
-  }
-
-  delay(1);
-  Serial.println("Client disconnected");
-  Serial.println();
-
 }
