@@ -92,42 +92,42 @@ Your API should be able to:
 
 2. Set the state when it receives:
 ```
-/setState/BOOL_VALUE
+/setState?value=BOOL_VALUE
 ```
 
 3. Set the color when it receives:
 ```
-/setColor/HEX_VALUE
+/setColor?value=HEX_VALUE
 ```
 
 4. Set the brightness when it receives:
 ```
-/setBrightness/INT_VALUE
+/setBrightness?value=INT_VALUE
 ```
 
 4. Set the color temperature when it receives: (if `colorTemperature` is enabled)
 ```
-/setColorTemperature/INT_VALUE
+/setColorTemperature?value=INT_VALUE
 ```
 
 ### Optional (if listener is enabled)
 
 1. Update `state` following a manual override by messaging the listen server:
 ```
-/state/INT_VALUE
+/state?value=INT_VALUE
 ```
 
 2. Update `color` following a manual override by messaging the listen server:
 ```
-/color/HEX_VALUE
+/color?value=HEX_VALUE
 ```
 
 3. Update `brightness` following a manual override by messaging the listen server:
 ```
-/brightness/INT_VALUE
+/brightness?value=INT_VALUE
 ```
 
 3. Update `colorTemperature` following a manual override by messaging the listen server: (if `colorTemperature` is enabled)
 ```
-/colorTemperature/INT_VALUE
+/colorTemperature?value=INT_VALUE
 ```
