@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tommrodrigues/homebridge-web-rgb.git"
+    "url": "git+https://github.com/phenotypic/homebridge-web-rgb.git"
   },
   "keywords": [
     "homebridge-plugin"
   ],
-  "author": "Tom Rodrigues",
+  "author": "phenotypic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Tommrodrigues/homebridge-web-rgb/issues"
+    "url": "https://github.com/phenotypic/homebridge-web-rgb/issues"
   },
-  "homepage": "https://github.com/Tommrodrigues/homebridge-web-rgb#readme"
+  "homepage": "https://github.com/phenotypic/homebridge-web-rgb#readme"
 }
