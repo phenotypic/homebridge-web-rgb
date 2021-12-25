@@ -4,8 +4,6 @@
 #include <ESP8266mDNS.h>
 #include <ArduinoJson.h>
 
-// GitHub Page = https://github.com/phenotypic/homebridge-web-rgb
-
 // GND = Ground
 // D5 = Red
 // D6 = Green
