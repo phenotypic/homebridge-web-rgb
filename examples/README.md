@@ -31,7 +31,7 @@ This script is designed to interface with the plugin to expose the web-based lig
 
 ![Diagram](https://i.ibb.co/jGL6RFc/RGB-Diagram.jpg)
 
-3. Assuming that you already have [homebridge](https://github.com/nfarina/homebridge#installation) set up, the next thing you will have to do is install the plugin:
+3. Assuming that you already have [homebridge](https://github.com/homebridge/homebridge#installation) set up, the next thing you will have to do is install the plugin:
 ```
 npm install -g homebridge-web-rgb
 ```
