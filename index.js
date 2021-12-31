@@ -22,7 +22,7 @@ function HTTP_RGB (log, config) {
   this.port = config.port || 2000
   this.requestArray = ['color', 'brightness', 'state', 'colorTemperature']
 
-  this.manufacturer = config.manufacturer || packageJson.author.name
+  this.manufacturer = config.manufacturer || packageJson.author
   this.serial = config.serial || this.apiroute
   this.model = config.model || packageJson.name
   this.firmware = config.firmware || packageJson.version

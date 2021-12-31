@@ -41,7 +41,7 @@ Find script samples for the RGB controller in the _examples_ folder.
 | `name` | Name to appear in the Home app | N/A |
 | `apiroute` | Root URL of your device | N/A |
 
-## Optional fields
+### Optional fields
 | Key | Description | Default |
 | --- | --- | --- |
 | `disableColor` | Whether the color characteristic should be hidden | `false` |
