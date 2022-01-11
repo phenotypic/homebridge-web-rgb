@@ -101,28 +101,32 @@ HTTP_RGB.prototype = {
         callback(error)
       } else {
         this.log.debug('Device response: %s', responseBody)
-        var json = JSON.parse(responseBody)
-        var hsv = convert.hex.hsv(json.currentColor)
-        this.cacheHue = hsv[0]
-        this.cacheSaturation = hsv[1]
-        this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState)
-        this.log.debug('Updated state to: %s', json.currentState)
-        if (!this.disableBrightness) {
-          this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness)
-          this.log.debug('Updated brightness to: %s', json.currentBrightness)
+        try {
+          var json = JSON.parse(responseBody)
+          var hsv = convert.hex.hsv(json.currentColor)
+          this.cacheHue = hsv[0]
+          this.cacheSaturation = hsv[1]
+          this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState)
+          this.log.debug('Updated state to: %s', json.currentState)
+          if (!this.disableBrightness) {
+            this.service.getCharacteristic(Characteristic.Brightness).updateValue(json.currentBrightness)
+            this.log.debug('Updated brightness to: %s', json.currentBrightness)
+          }
+          if (!this.disableColor) {
+            this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue)
+            this.log.debug('Updated hue to: %s', this.cacheHue)
+            this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation)
+            this.log.debug('Updated saturation to: %s', this.cacheSaturation)
+            this.log.debug('Updated color to: %s', json.currentColor)
+          }
+          if (this.colorTemperature) {
+            this.service.getCharacteristic(Characteristic.ColorTemperature).updateValue(json.colorTemperature)
+            this.log.debug('Updated color temperature to: %s', json.colorTemperature)
+          }
+          callback()
+        } catch (e) {
+          this.log.warn('Error parsing status: %s', e.message)
         }
-        if (!this.disableColor) {
-          this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue)
-          this.log.debug('Updated hue to: %s', this.cacheHue)
-          this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.cacheSaturation)
-          this.log.debug('Updated saturation to: %s', this.cacheSaturation)
-          this.log.debug('Updated color to: %s', json.currentColor)
-        }
-        if (this.colorTemperature) {
-          this.service.getCharacteristic(Characteristic.ColorTemperature).updateValue(json.colorTemperature)
-          this.log.debug('Updated color temperature to: %s', json.colorTemperature)
-        }
-        callback()
       }
     }.bind(this))
   },
