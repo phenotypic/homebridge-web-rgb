@@ -1,4 +1,4 @@
-var Service, Characteristic
+let Service, Characteristic
 const packageJson = require('./package.json')
 const request = require('request')
 const convert = require('color-convert')
@@ -49,12 +49,16 @@ function HTTP_RGB (log, config) {
 
   if (this.listener) {
     this.server = http.createServer(function (request, response) {
-      var baseURL = 'http://' + request.headers.host + '/'
-      var url = new URL(request.url, baseURL)
+      const baseURL = 'http://' + request.headers.host + '/'
+      const url = new URL(request.url, baseURL)
       if (this.requestArray.includes(url.pathname.substr(1))) {
-        this.log.debug('Handling request')
-        response.end('Handling request')
-        this._httpHandler(url.pathname.substr(1), url.searchParams.get('value'))
+        try {
+          this.log.debug('Handling request')
+          response.end('Handling request')
+          this._httpHandler(url.pathname.substr(1), url.searchParams.get('value'))
+        } catch (e) {
+          this.log.warn('Error parsing request: %s', e.message)
+        }
       } else {
         this.log.warn('Invalid request: %s', request.url)
         response.end('Invalid request')
@@ -91,7 +95,7 @@ HTTP_RGB.prototype = {
   },
 
   _getStatus: function (callback) {
-    var url = this.apiroute + '/status'
+    const url = this.apiroute + '/status'
     this.log.debug('Getting status: %s', url)
 
     this._httpRequest(url, '', 'GET', function (error, response, responseBody) {
@@ -102,8 +106,8 @@ HTTP_RGB.prototype = {
       } else {
         this.log.debug('Device response: %s', responseBody)
         try {
-          var json = JSON.parse(responseBody)
-          var hsv = convert.hex.hsv(json.currentColor)
+          const json = JSON.parse(responseBody)
+          const hsv = convert.hex.hsv(json.currentColor)
           this.cacheHue = hsv[0]
           this.cacheSaturation = hsv[1]
           this.service.getCharacteristic(Characteristic.On).updateValue(json.currentState)
@@ -133,20 +137,23 @@ HTTP_RGB.prototype = {
 
   _httpHandler: function (characteristic, value) {
     switch (characteristic) {
-      case 'state':
+      case 'state': {
         this.service.getCharacteristic(Characteristic.On).updateValue(value)
         this.log('Updated %s to: %s', characteristic, value)
         break
-      case 'brightness':
+      }
+      case 'brightness': {
         this.service.getCharacteristic(Characteristic.Brightness).updateValue(value)
         this.log('Updated %s to: %s', characteristic, value)
         break
-      case 'colorTemperature':
+      }
+      case 'colorTemperature': {
         this.service.getCharacteristic(Characteristic.ColorTemperature).updateValue(value)
         this.log('Updated %s to: %s', characteristic, value)
         break
-      case 'color':
-        var hsv = convert.hex.hsv(value)
+      }
+      case 'color': {
+        const hsv = convert.hex.hsv(value)
         this.cacheHue = hsv[0]
         this.cacheSaturation = hsv[1]
         this.service.getCharacteristic(Characteristic.Hue).updateValue(this.cacheHue)
@@ -155,13 +162,15 @@ HTTP_RGB.prototype = {
         this.log.debug('Updated saturation to: %s', this.cacheSaturation)
         this.log('Updated %s to: %s', characteristic, value)
         break
-      default:
+      }
+      default: {
         this.log.warn('Unknown characteristic "%s" with value "%s"', characteristic, value)
+      }
     }
   },
 
   setOn: function (value, callback) {
-    var url = this.apiroute + '/setState?value=' + value
+    const url = this.apiroute + '/setState?value=' + value
     this.log.debug('Setting state: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
@@ -176,7 +185,7 @@ HTTP_RGB.prototype = {
   },
 
   setColorTemperature: function (value, callback) {
-    var url = this.apiroute + '/setColorTemperature?value=' + value
+    const url = this.apiroute + '/setColorTemperature?value=' + value
     this.log.debug('Setting color temperature: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
@@ -191,7 +200,7 @@ HTTP_RGB.prototype = {
   },
 
   setBrightness: function (value, callback) {
-    var url = this.apiroute + '/setBrightness?value=' + value
+    const url = this.apiroute + '/setBrightness?value=' + value
     this.log.debug('Setting brightness: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
@@ -224,8 +233,8 @@ HTTP_RGB.prototype = {
       return
     }
 
-    var hex = convert.hsv.hex(this.cacheHue, this.cacheSaturation, 100)
-    var url = this.apiroute + '/setColor?value=' + hex
+    const hex = convert.hsv.hex(this.cacheHue, this.cacheSaturation, 100)
+    const url = this.apiroute + '/setColor?value=' + hex
     this.log.debug('Setting color: %s', url)
 
     this._httpRequest(url, '', this.http_method, function (error, response, responseBody) {
